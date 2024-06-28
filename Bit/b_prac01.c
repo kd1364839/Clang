@@ -1,0 +1,160 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#define Skil_num 3
+#define Mob_Num 3
+enum BitState
+{
+	Base      = 0,     //00000000Å@í èÌèÛë‘
+	Poison    = 1 << 0,//00000001Å@ì≈èÛë‘
+	Sleep     = 1 << 1,//00000010Å@ñ∞ÇËèÛë‘
+	Paralysis = 1 << 2,//00000100Å@É}ÉqèÛë‘
+	Burn      = 1 << 3,//00001000Å@Ç‚ÇØÇ«èÛë‘
+	AtkUp     = 1 << 4,//00010000Å@çUåÇóÕÉAÉbÉvèÛë‘
+	AtkDown   = 1 << 5,//00100000Å@çUåÇóÕÉ_ÉEÉìèÛë‘
+	Dead	  = 1 << 6,//01000000  éÄñSÉtÉâÉO
+	Atk_Skill = 1 << 7 //10000000  
+};
+
+typedef struct {
+	char name[20];
+	int type;
+	int use_mp;
+	int effect;
+};
+
+typedef struct {
+	char name{ 20 };
+	int hp;
+	int atk;
+	int def;
+	UINT state; 
+}; Spec;
+
+typedef struct { //Charaå^ç\ë¢ëÃ
+	Spec sp;     //Specå^ç\ë¢ëÃïœêî
+	int maxhp;
+	int mp;
+	Skill skl[Skil ? num];
+}; Chara;
+
+typedef struct {
+	Spec sp;
+	int rate;
+}; Mob;
+
+int TurnCount = 0;
+
+typedef unsigned int UINT;
+void DisplayStatus(Chara s);
+void BattleMode(Chara* c, Mob m);
+int DisplayMenu(void);
+int SkillMenu(Chara c);
+int DamageCalc(Spec sp1, Spec sp2);
+void BattleMessage(Spec sp1, Spec* sp2);
+
+main()
+{
+	UINT MyState = Base;
+	ChangeFlag(&MyState);
+	DisplayStatus(MyState);
+	ClearFlag(&MyState);
+	DisplayStatus(MyState);
+}
+
+void DisplayStatus(UINT s)
+{
+	printf("*****åªç›ÇÃèÛë‘*****\n");
+	if (s & Poison) {
+		printf("ì≈\n");
+	}
+	if (s & Sleep) {
+		printf("ñ∞ÇË\n");
+	}
+	if (s & Paralysis) {
+		printf("É}Éq\n");
+	}
+	if (s & Burn) {
+		printf("Ç‚ÇØÇ«\n");
+	}
+	if (s & AtkUp) {
+		printf("çUåÇóÕÉAÉbÉv\n");
+	}
+	if (s & AtkDown) {
+		printf("çUåÇóÕÉ_ÉEÉì\n");
+	}
+	if (s == Base) {
+		printf("èâä˙èÛë‘\n");
+	}
+	printf("***************\n");
+}
+
+void ChangeFlag(UINT* s)
+{
+	int a;
+	while (1) {
+		printf("Ç«ÇÃèÛë‘Ç…ÇµÇ‹Ç∑Ç©?\n");
+		printf("1:ì≈ 2:êáñ∞ 3:É}Éq 4:Ç‚ÇØÇ« 5:çUåÇÅ™ 6:çUåÇÅ´ 0:èIóπ>");
+		scanf("%d", &a);
+		if (a == 0) {
+			break;
+		}
+		switch (a) {
+		case 1:
+			*s |= Poison;
+			break;
+		case 2:
+			*s |= Sleep;
+			break;
+		case 3:
+			*s |= Paralysis;
+			break;
+		case 4:
+			*s |= Burn;
+			break;
+		case 5:
+			*s |= AtkUp;
+			break;
+		case 6:
+			*s |= AtkDown;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void ClearFlag(UINT* s) 
+{
+	int a;
+	while (1) {
+		printf("Ç«ÇÃèÛë‘ÇâèúÇµÇ‹Ç∑Ç©?\n");
+		printf("1:ì≈ 2:êáñ∞ 3:É}Éq 4:Ç‚ÇØÇ« 5:çUåÇÅ™ 6:çUåÇÅ´ 0:èIóπ>");
+		scanf("%d", &a);
+		if (a == 0) {
+			break;
+		}
+		switch (a) {
+		case 1:
+			*s &= ~Poison;
+			break;
+		case 2:
+			*s &= ~Sleep;
+			break;
+		case 3:
+			*s &= ~Paralysis;
+			break;
+		case 4:
+			*s &= ~Burn;
+			break;
+		case 5:
+			*s &= ~AtkUp;
+			break;
+		case 6:
+			*s &= ~AtkDown;
+			break;
+		default:
+			break;
+		}
+	}
+}
